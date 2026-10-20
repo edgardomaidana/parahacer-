@@ -8,7 +8,7 @@
     <img src="${petsImage}" alt="A cat and a dog"/>
 
     <h2>Something happened...</h2>
-
+    <h2>Algo malo ocurrió...</h2>
     <p>${exception.message}</p>
 
 </petclinic:layout>

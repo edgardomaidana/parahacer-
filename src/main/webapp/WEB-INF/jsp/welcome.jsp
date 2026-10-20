@@ -11,4 +11,5 @@
             <img class="img-responsive" alt="A cat and a dog" src="${petsImage}"/>
         </div>
     </div>
+    <p> modificado </p>
 </petclinic:layout>

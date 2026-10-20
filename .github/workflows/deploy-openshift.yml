@@ -1,0 +1,38 @@
+name: CI/CD to OpenShift
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Configurar Java JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'maven'
+
+    - name: Construir con Maven
+      run: ./mvnw clean package -DskipTests
+
+    - name: Autenticarse en OpenShift
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+        openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+        insecure_skip_tls_verify: true
+
+    - name: Iniciar Build en OpenShift (Binary Build)
+      run: |
+        oc project ${{ secrets.OPENSHIFT_NAMESPACE }}
+        # Si el build config no existe, se crea la primera vez
+        oc new-build --name=spring-petclinic --image-stream=java:17 --binary=true || true
+        # Se envía el archivo JAR generado para que OpenShift construya la imagen
+        oc start-build spring-petclinic --from-file=target/spring-petclinic-*.jar --follow
+																																																																																																																																													
