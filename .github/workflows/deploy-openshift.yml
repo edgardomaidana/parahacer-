@@ -21,14 +21,19 @@ jobs:
     - name: 3. Compilar y empaquetar con Maven
       run: ./mvnw clean package -DskipTests
 
-    - name: 4. Autenticarse en el clúster de OpenShift
+    - name: 4. Instalar OpenShift CLI (oc)
+      uses: redhat-actions/openshift-tools-installer@v1
+      with:
+        oc: "latest"
+
+    - name: 5. Autenticarse en el clúster de OpenShift
       uses: redhat-actions/oc-login@v1
       with:
         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
         insecure_skip_tls_verify: true
 
-    - name: 5. Enviar el binario JAR y construir la imagen en OpenShift
+    - name: 6. Enviar el binario JAR y construir la imagen en OpenShift
       run: |
         oc project ${{ secrets.OPENSHIFT_NAMESPACE }}
         oc new-build --name=spring-petclinic --image-stream=java:openjdk-17-ubi8 --binary=true || true
