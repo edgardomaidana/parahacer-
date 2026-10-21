@@ -33,7 +33,7 @@ jobs:
         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
         insecure_skip_tls_verify: true
 
-		- name: 6. Enviar el binario JAR y construir la imagen en OpenShift
+	- name: 6. Enviar el binario JAR y construir la imagen en OpenShift
 		run: |
 		  # 1. Asegurar que estamos en el proyecto correcto
 		  oc project ${{ secrets.OPENSHIFT_NAMESPACE }}
