@@ -33,9 +33,8 @@ jobs:
         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
         insecure_skip_tls_verify: true
 
-    - name: 6. Enviar el binario JAR y construir la imagen en OpenShift
+    - name: 6. Enviar el binario WAR y construir la imagen en OpenShift
       run: |
         oc project ${{ secrets.OPENSHIFT_NAMESPACE }}
-        oc new-build --name=spring-petclinic --image-stream=java:openjdk-17-ubi8 --binary=true || true
-        oc start-build spring-petclinic --from-file=target/spring-petclinic-*.jar --follow
+        oc start-build spring-petclinic --from-file=target/spring-petclinic-*.war --follow
         oc new-app --image-stream=spring-petclinic:latest --name=spring-petclinic || true
