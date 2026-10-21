@@ -34,16 +34,16 @@ jobs:
         insecure_skip_tls_verify: true
 
 	- name: 6. Enviar el binario JAR y construir la imagen en OpenShift
-		run: |
-		  # 1. Asegurar que estamos en el proyecto correcto
-		  oc project ${{ secrets.OPENSHIFT_NAMESPACE }}
+	  run: |
+        # 1. Asegurar que estamos en el proyecto correcto
+		oc project ${{ secrets.OPENSHIFT_NAMESPACE }}
 		  
-		  # 2. Crear la configuración de construcción binaria (si no existe)
-		  oc new-build --name=spring-petclinic --image-stream=java:openjdk-17-ubi8 --binary=true || true
+		# 2. Crear la configuración de construcción binaria (si no existe)
+		oc new-build --name=spring-petclinic --image-stream=java:openjdk-17-ubi8 --binary=true || true
 		  
-		  # 3. Subir el archivo JAR compilado por GitHub para que OpenShift ensamble la imagen
-		  oc start-build spring-petclinic --from-file=target/spring-petclinic-*.jar --follow
+		# 3. Subir el archivo JAR compilado por GitHub para que OpenShift ensamble la imagen
+		oc start-build spring-petclinic --from-file=target/spring-petclinic-*.jar --follow
 		  
-		  # 4. Crear la aplicación (Deployment y Service) basados en la imagen que acabamos de construir
-		  # El "|| true" evita que falle si ya la habías creado antes
-		  oc new-app --image-stream=spring-petclinic:latest --name=spring-petclinic || true
+		# 4. Crear la aplicación (Deployment y Service) basados en la imagen que acabamos de construir
+		# El "|| true" evita que falle si ya la habías creado antes
+		oc new-app --image-stream=spring-petclinic:latest --name=spring-petclinic || true
