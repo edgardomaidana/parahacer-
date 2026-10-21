@@ -36,5 +36,5 @@ jobs:
     - name: 6. Enviar el binario WAR y construir la imagen en OpenShift
       run: |
         oc project ${{ secrets.OPENSHIFT_NAMESPACE }}
-        oc start-build spring-petclinic --from-file=target/spring-petclinic-*.war --follow
+        oc start-build spring-petclinic --from-file=target/petclinic.war --follow
         oc new-app --image-stream=spring-petclinic:latest --name=spring-petclinic || true
